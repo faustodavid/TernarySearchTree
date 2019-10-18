@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TernarySearchTree
 {
@@ -58,42 +59,34 @@ namespace TernarySearchTree
             return middleNode;
         }
 
-        internal static Node<TValue> GetNodeWithValue<TValue>(Node<TValue> node, string key)
+        internal static Node<TValue> GetNodeWithValue<TValue>(Node<TValue> node, ReadOnlySpan<char> key)
         {
-            // Setup current key index and character.
             var currentKeyCharacterIndex = 0;
             var currentKeyCharacter = key[currentKeyCharacterIndex];
 
-            // Loop while we have a node reference.
             while (node != null)
             {
                 if (currentKeyCharacter < node.SplitCharacter)
                 {
-                    // Set current node to lower node.
                     node = node.LowerNode;
                 }
                 else if (currentKeyCharacter > node.SplitCharacter)
                 {
-                    // Set current node to higher node.
                     node = node.HigherNode;
                 }
                 else
                 {
-                    // If we have processed the whole key, return node information if it has a value.
                     if (++currentKeyCharacterIndex == key.Length)
                     {
                         return node.HasValue ? node : null;
                     }
 
-                    // Advance to next split character.
                     currentKeyCharacter = key[currentKeyCharacterIndex];
 
-                    // Set current node to equal node.
                     node = node.EqualNode;
                 }
             }
 
-            // If we get here there was no nodes to traverse, the key could not be found.
             return null;
         }
 
@@ -136,58 +129,47 @@ namespace TernarySearchTree
             return null;
         }
 
-        internal static Node<TValue> CreateNodes<TValue>(ref Node<TValue> root, string key)
+        internal static Node<TValue> CreateNodes<TValue>(ref Node<TValue> root, ReadOnlySpan<char> key)
         {
-            // Setup current key index and character.
             var currentKeyCharacterIndex = 0;
             var currentKeyCharacter = key[currentKeyCharacterIndex];
 
-            // Create a root node if it does not exist.
             if (root == null)
             {
                 root = new Node<TValue>(currentKeyCharacter);
             }
 
-            // Get current node.
             var node = root;
 
-            // Loop until we have added the key and value.
             for (;;)
             {
                 if (currentKeyCharacter < node.SplitCharacter)
                 {
-                    // If no lower node exists, create a new lower node.
                     if (node.LowerNode == null)
                     {
                         node.LowerNode = new Node<TValue>(currentKeyCharacter);
                     }
 
-                    // Set current node to lower node.
                     node = node.LowerNode;
                 }
                 else if (currentKeyCharacter > node.SplitCharacter)
                 {
-                    // If no higher node exists, create a new higher node.
                     if (node.HigherNode == null)
                     {
                         node.HigherNode = new Node<TValue>(currentKeyCharacter);
                     }
 
-                    // Set current node to higher node.
                     node = node.HigherNode;
                 }
                 else if (++currentKeyCharacterIndex < key.Length)
                 {
-                    // Advance to next split character.
                     currentKeyCharacter = key[currentKeyCharacterIndex];
 
-                    // Create new equal node if it does not exist.
                     if (node.EqualNode == null)
                     {
                         node.EqualNode = new Node<TValue>(currentKeyCharacter);
                     }
 
-                    // Set current node to equal node.
                     node = node.EqualNode;
                 }
                 else

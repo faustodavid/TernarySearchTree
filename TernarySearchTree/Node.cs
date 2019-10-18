@@ -21,10 +21,7 @@
 
         public TValue Value
         {
-            get
-            {
-                return value;
-            }
+            get => value;
 
             set
             {
@@ -35,7 +32,7 @@
 
         internal void ClearValue()
         {
-            value = default(TValue);
+            value = default;
             HasValue = false;
         }
 

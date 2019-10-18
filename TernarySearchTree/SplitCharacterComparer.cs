@@ -2,7 +2,7 @@
 
 namespace TernarySearchTree
 {
-    internal class SplitCharacterComparer<TValue> : IComparer<Node<TValue>>
+    internal struct SplitCharacterComparer<TValue> : IComparer<Node<TValue>>
     {
         public int Compare(Node<TValue> x, Node<TValue> y)
         {

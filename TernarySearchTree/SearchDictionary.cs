@@ -50,6 +50,18 @@ namespace TernarySearchTree
         /// <returns>Gets or sets the value associated with the specified key.</returns>
         public TValue this[string key]
         {
+            get => this[key.AsSpan()];
+
+            set => this[key.AsSpan()] = value;
+        }
+
+        /// <summary>
+        /// Get/set value by key.
+        /// </summary>
+        /// <param name="key">Key to get or set.</param>
+        /// <returns>Gets or sets the value associated with the specified key.</returns>
+        public TValue this[ReadOnlySpan<char> key]
+        {
             get
             {
                 Argument.IsNotNullAndNotEmpty(key, nameof(key));
@@ -80,15 +92,26 @@ namespace TernarySearchTree
                 leafNode.Value = value;
             }
         }
-
         /// <summary>
         /// Add an item to the dictionary.
         /// </summary>
         /// <param name="key">Key of the item. May not be null or an empty string.</param>
         /// <param name="value">Value to associate with the key.</param>
-        public void Add(string key, TValue value)
+        public virtual void Add(string key, TValue value)
         {
             Argument.IsNotNullAndNotEmpty(key, nameof(key));
+
+           Add(key.AsSpan(), value);
+        }
+
+        /// <summary>
+        /// Add an item to the dictionary.
+        /// </summary>
+        /// <param name="key">Key of the item. May not be null or empty.</param>
+        /// <param name="value">Value to associate with the key.</param>
+        public virtual void Add(ReadOnlySpan<char> key, TValue value)
+        {
+            Argument.ThrowIfNullOrEmpty(key, nameof(key));
 
             var leafNode = Tree.CreateNodes(ref root, key);
             if (leafNode.HasValue)
@@ -130,7 +153,7 @@ namespace TernarySearchTree
         {
             Argument.IsNotNullAndNotEmpty(key, nameof(key));
 
-            var node = Tree.GetNodeWithValue(root, key);
+            var node = Tree.GetNodeWithValue(root, key.AsSpan());
             return node != null && node.HasValue;
         }
 
@@ -144,7 +167,7 @@ namespace TernarySearchTree
             Argument.IsNotNull(item, nameof(item));
             Argument.IsNotNullAndNotEmpty(item.Key, nameof(item));
 
-            var node = Tree.GetNodeWithValue(root, item.Key);
+            var node = Tree.GetNodeWithValue(root, item.Key.AsSpan());
 
             return node != null && node.HasValue && EqualityComparer<TValue>.Default.Equals(node.Value, item.Value);
         }
@@ -159,7 +182,7 @@ namespace TernarySearchTree
         {
             Argument.IsNotNullAndNotEmpty(key, nameof(key));
 
-            var node = Tree.GetNodeWithValue(root, key);
+            var node = Tree.GetNodeWithValue(root, key.AsSpan());
             if (node == null || node.HasValue == false)
             {
                 value = default(TValue);
@@ -221,7 +244,7 @@ namespace TernarySearchTree
         {
             Argument.IsNotNullAndNotEmpty(key, nameof(key));
 
-            var node = Tree.GetNodeWithValue(root, key);
+            var node = Tree.GetNodeWithValue(root, key.AsSpan());
             if (node == null || node.HasValue == false)
             {
                 return false;
@@ -240,7 +263,7 @@ namespace TernarySearchTree
             Argument.IsNotNull(item, nameof(item));
             Argument.IsNotNullAndNotEmpty(item.Key, nameof(item));
 
-            var node = Tree.GetNodeWithValue(root, item.Key);
+            var node = Tree.GetNodeWithValue(root, item.Key.AsSpan());
             if (node == null || node.HasValue == false || EqualityComparer<TValue>.Default.Equals(node.Value, item.Value) == false)
             {
                 return false;
