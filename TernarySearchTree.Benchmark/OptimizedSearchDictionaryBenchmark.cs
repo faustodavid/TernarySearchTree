@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 
 namespace TernarySearchTree.Benchmark
@@ -18,10 +19,16 @@ namespace TernarySearchTree.Benchmark
             searchDictionary.Optimize();
         }
 
-        [Benchmark]
+        [Benchmark(Baseline = true)]
         public override int StartsWith()
         {
             return searchDictionary.StartsWith(RepeatedKeys[KeyIndex++]).Sum();
+        }
+
+        [Benchmark]
+        public int StartsWith_AsMemory()
+        {
+            return searchDictionary.StartsWith(RepeatedKeys[KeyIndex++].AsMemory()).Sum();
         }
     }
 }

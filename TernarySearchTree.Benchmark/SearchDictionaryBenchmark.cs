@@ -19,10 +19,16 @@ namespace TernarySearchTree.Benchmark
             searchDictionary = (SearchDictionary<int>)Dictionary;
         }
 
-        [Benchmark]
+        [Benchmark(Baseline = true)]
         public override int StartsWith()
         {
             return searchDictionary.StartsWith(RepeatedKeys[KeyIndex]).Sum();
+        }
+
+        [Benchmark]
+        public int StartsWith_AsMemory()
+        {
+            return searchDictionary.StartsWith(RepeatedKeys[KeyIndex].AsMemory()).Sum();
         }
     }
 }

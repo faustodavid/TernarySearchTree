@@ -10,13 +10,19 @@ namespace TernarySearchTree
             IsNotEmpty(argument, argumentName);
         }
 
-        internal static void IsNotNullAndNotEmpty(ReadOnlySpan<char> argument, string argumentName)
+        internal static void IsNotNullAndNotEmpty(in ReadOnlySpan<char> argument, string argumentName)
         {
             IsNotNull(argument, argumentName);
             IsNotEmpty(argument, argumentName);
         }
 
-        internal static void IsNotNull(ReadOnlySpan<char> argument, string argumentName)
+        internal static void IsNotNullAndNotEmpty(in ReadOnlyMemory<char> argument, string argumentName)
+        {
+            IsNotNull(argument, argumentName);
+            IsNotEmpty(argument, argumentName);
+        }
+
+        internal static void IsNotNull(in ReadOnlySpan<char> argument, string argumentName)
         {
             if (argument == null)
             {
@@ -40,9 +46,17 @@ namespace TernarySearchTree
             }
         }
 
-        internal static void IsNotEmpty(ReadOnlySpan<char> argument, string argumentName)
+        internal static void IsNotEmpty(in ReadOnlySpan<char> argument, string argumentName)
         {
             if (argument == null)
+            {
+                throw new ArgumentException("Argument cannot be an empty string.", argumentName);
+            }
+        }
+
+        internal static void IsNotEmpty(in ReadOnlyMemory<char> argument, string argumentName)
+        {
+            if (argument.IsEmpty)
             {
                 throw new ArgumentException("Argument cannot be an empty string.", argumentName);
             }
@@ -56,13 +70,13 @@ namespace TernarySearchTree
             }            
         }
 
-        internal static void ThrowIfNullOrEmpty(ReadOnlySpan<char> argument, string argumentName)
+        internal static void ThrowIfNullOrEmpty(in ReadOnlySpan<char> argument, string argumentName)
         {
             ThrowIfNull(argument, argumentName);
             ThrowIfEmpty(argument, argumentName);
         }
 
-        internal static void ThrowIfNull(ReadOnlySpan<char> argument, string argumentName)
+        internal static void ThrowIfNull(in ReadOnlySpan<char> argument, string argumentName)
         {
             if (argument == null)
             {
@@ -70,7 +84,7 @@ namespace TernarySearchTree
             }
         }
 
-        internal static void ThrowIfEmpty(ReadOnlySpan<char> argument, string argumentName)
+        internal static void ThrowIfEmpty(in ReadOnlySpan<char> argument, string argumentName)
         {
             if (argument.Length == 0)
             {

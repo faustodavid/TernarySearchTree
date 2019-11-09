@@ -60,7 +60,7 @@ namespace TernarySearchTree
         /// </summary>
         /// <param name="key">Key to get or set.</param>
         /// <returns>Gets or sets the value associated with the specified key.</returns>
-        public TValue this[ReadOnlySpan<char> key]
+        public TValue this[in ReadOnlySpan<char> key]
         {
             get
             {
@@ -109,7 +109,7 @@ namespace TernarySearchTree
         /// </summary>
         /// <param name="key">Key of the item. May not be null or empty.</param>
         /// <param name="value">Value to associate with the key.</param>
-        public virtual void Add(ReadOnlySpan<char> key, TValue value)
+        public virtual void Add(in ReadOnlySpan<char> key, TValue value)
         {
             Argument.ThrowIfNullOrEmpty(key, nameof(key));
 
@@ -200,8 +200,33 @@ namespace TernarySearchTree
         /// <returns>List of values matching key.</returns>
         public IEnumerable<TValue> StartsWith(string startOfKey)
         {
-            Argument.IsNotNullAndNotEmpty(startOfKey, nameof(startOfKey));
+          //  Argument.IsNotNullAndNotEmpty(startOfKey, nameof(startOfKey));
 
+            var node = Tree.GetNode(root, startOfKey);
+            if (node == null)
+            {
+                yield break;
+            }
+
+            if (node.HasValue)
+            {
+                yield return node.Value;
+            }
+            
+            foreach (var value in Tree.GetAllValues(node.EqualNode))
+            {
+                yield return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets all items starting with the specified key.
+        /// </summary>
+        /// <param name="startOfKey">Start of keys to match.</param>
+        /// <returns>List of values matching key.</returns>
+        public IEnumerable<TValue> StartsWith(ReadOnlyMemory<char> startOfKey)
+        {
+            Argument.IsNotNullAndNotEmpty(startOfKey, nameof(startOfKey));
             var node = Tree.GetNode(root, startOfKey);
             if (node == null)
             {

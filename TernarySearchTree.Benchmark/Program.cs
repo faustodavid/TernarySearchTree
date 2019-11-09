@@ -8,7 +8,7 @@ namespace TernarySearchTree.Benchmark
         {
             BenchmarkRunner.Run<SearchDictionaryBenchmark>();
             BenchmarkRunner.Run<OptimizedSearchDictionaryBenchmark>();
-            BenchmarkRunner.Run<DictionaryBenchmark>();
+          //  BenchmarkRunner.Run<DictionaryBenchmark>();
         }
     }
 }
